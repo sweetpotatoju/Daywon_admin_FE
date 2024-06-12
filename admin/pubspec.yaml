@@ -26,15 +26,20 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+# versions available, run `flutter pub xwoutdated`.
 dependencies:
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
+    
+  flutter_native_splash: ^2.4.0 # 스플래시 스크린
+  http: ^1.2.1
+  video_player: ^2.7.2
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6
+flutter_native_splash:
+  image: assets/img/SplashScreen.png # 추가할 이미지 파일 경로를 추가
+  color: "#ffffff"
+  fullscreen: true
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +62,21 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets/img/DayWon.png
+    - assets/img/circle.png
+    - assets/img/backbtn.png
+    - assets/img/homebtn.png
+    - assets/img/mypagebtn.png
+    - assets/img/playbtn.png
+    - assets/img/marimo_1.png
+    - assets/img/marimo_2.png
+    - assets/img/marimo_3.png
+    - assets/img/marimo_4.png
+    - assets/img/rank1.png
+    - assets/img/rank2.png
+    - assets/img/rank3.png
+    
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -85,6 +104,9 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+  fonts:
+    - family: KCC-Hanbit
+      fonts:
+        - asset: assets/fonts/KCC-Hanbit.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
