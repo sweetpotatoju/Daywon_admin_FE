@@ -1,4 +1,4 @@
-import 'package:admin/admin/CompleteCheckProblemCommentaryPage.dart';
+import 'package:admin/completeCheck/CompleteCheckProblemCommentaryPage.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

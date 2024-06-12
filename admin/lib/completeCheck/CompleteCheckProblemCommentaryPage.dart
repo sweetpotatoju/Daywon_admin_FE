@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:admin/admin/CompleteCheckProblem.dart';
+import 'package:admin/completeCheck/CompleteCheckProblem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

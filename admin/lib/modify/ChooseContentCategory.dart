@@ -1,6 +1,6 @@
-import 'package:admin/admin/ModifyCaseScript.dart';
-import 'package:admin/admin/ModifyConceptScript.dart';
-import 'package:admin/admin/ModifyProblem.dart';
+import 'package:admin/modify/ModifyCaseScript.dart';
+import 'package:admin/modify/ModifyConceptScript.dart';
+import 'package:admin/modify/ModifyProblem.dart';
 import 'package:flutter/material.dart';
 
 void main() {

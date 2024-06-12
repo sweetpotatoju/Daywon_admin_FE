@@ -30,6 +30,5 @@ String getServerUri() {
   if (serverUri == null) {
     throw Exception("Server URI is not set");
   }
-  print(serverUri);
   return serverUri;
 }

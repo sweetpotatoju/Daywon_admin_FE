@@ -1,4 +1,4 @@
-import 'package:admin/admin/ModifyProblem.dart';
+import 'package:admin/modify/ModifyProblem.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

@@ -1,14 +1,14 @@
 // ignore_for_file: file_names
 
-import 'package:admin/admin/NeedToCheckProblemDetails.dart';
+import 'package:admin/completeCheck/CompleteCheckProblemDetails.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(NeedToCheckProblem());
+  runApp(CompleteCheckProblem());
 }
 
 // ignore: use_key_in_widget_constructors
-class NeedToCheckProblem extends StatelessWidget {
+class CompleteCheckProblem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +51,7 @@ class NeedToCheckProblem extends StatelessWidget {
                     left: width * 0.07,
                     top: height * 0.07,
                     child: Text(
-                      '검수 필요 문제',
+                      '검수 완료 문제',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: width * 0.07,
@@ -64,7 +64,7 @@ class NeedToCheckProblem extends StatelessWidget {
                     left: width * 0.07,
                     top: height * 0.14,
                     child: Text(
-                      '관리자님, 검수가 필요한 문제를 확인하세요!',
+                      '관리자님, 검수가 완료된 문제를 확인하세요!',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: width * 0.035,
@@ -88,7 +88,7 @@ class NeedToCheckProblem extends StatelessWidget {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: '검수 필요 문제\n',
+                                text: '검수 완료 문제\n',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: width * 0.03,
@@ -146,7 +146,7 @@ class NeedToCheckProblem extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              NeedToCheckProblemDetails(
+                                              CompleteCheckProblemDetails(
                                                   index: index),
                                         ),
                                       );

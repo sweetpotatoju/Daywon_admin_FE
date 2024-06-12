@@ -1,9 +1,9 @@
 // ignore_for_file: unnecessary_const
 
-import 'package:admin/admin/AdminAccountManagementPage.dart';
-import 'package:admin/admin/AdminCreateProblemPage.dart';
-import 'package:admin/admin/CompleteCheckProblem.dart';
-import 'package:admin/admin/ContentReview.dart';
+import 'package:admin/AdminAccountManagementPage.dart';
+import 'package:admin/AdminCreateProblemPage.dart';
+import 'package:admin/completeCheck/CompleteCheckProblem.dart';
+import 'package:admin/modify/ChooseContentCategory.dart';
 import 'package:flutter/material.dart';
 
 void main() {
