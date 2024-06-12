@@ -1,16 +1,51 @@
-import 'package:admin/AdminPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-void main() {
-  runApp(const LoginPage());
-}
+import 'package:http/http.dart' as http;
+import 'package:admin/AdminPage.dart'; // 올바른 경로로 수정
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final String apiUrl;
+
+  const LoginPage({Key? key, required this.apiUrl}) : super(key: key);
+
+  Future<void> _login(BuildContext context, String username, String password) async {
+    final url = Uri.parse('$apiUrl/admins/login');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: {
+        'admin_name': username,
+        'password': password,
+      },
+    );
+
+    if (response.statusCode == 303) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AdminPage()), // AdminPage를 호출합니다.
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Login Failed'),
+          content: Text('Invalid credentials'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final usernameController = TextEditingController();
+    final passwordController = TextEditingController();
+
     return Scaffold(
       body: Center(
         child: Stack(
@@ -35,6 +70,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         labelText: '아이디',
                         filled: true,
@@ -51,6 +87,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: passwordController,
                       decoration: InputDecoration(
                         labelText: '비밀번호',
                         filled: true,
@@ -67,11 +104,7 @@ class LoginPage extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdminPage()),
-                          );
+                          _login(context, usernameController.text, passwordController.text);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4399FF),
