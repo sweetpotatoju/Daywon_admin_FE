@@ -115,6 +115,15 @@ class LoginPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
+                    const Text(
+                      '관리자 페이지에서 문제를 자동생성하세요.',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
