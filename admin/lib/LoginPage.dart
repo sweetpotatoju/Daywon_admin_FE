@@ -1,4 +1,4 @@
-import 'package:admin/admin/AdminPage.dart';
+import 'package:admin/AdminPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
