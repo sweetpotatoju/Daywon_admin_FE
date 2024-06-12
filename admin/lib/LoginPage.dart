@@ -90,57 +90,9 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide.none,
-                            ),
-                          ),
-                          child: const Text(
-                            '회원가입',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const AdminPage()),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide.none,
-                            ),
-                          ),
-                          child: const Text(
-                            '관리자 페이지',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     const Text(
-                      'Day￦과 금융 학습을 더 재미있고 효과적으로 만들어 보세요!',
+                      '관리자 페이지에서 문제를 자동생성하세요.',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,

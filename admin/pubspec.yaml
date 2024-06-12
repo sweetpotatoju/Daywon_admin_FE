@@ -37,7 +37,7 @@ dependencies:
   video_player: ^2.7.2
 
 flutter_native_splash:
-  image: assets/img/SplashScreen.png # 추가할 이미지 파일 경로를 추가
+  image: assets/img/splashScreen.png # 추가할 이미지 파일 경로를 추가
   color: "#ffffff"
   fullscreen: true
 
@@ -76,6 +76,7 @@ flutter:
     - assets/img/rank1.png
     - assets/img/rank2.png
     - assets/img/rank3.png
+    - assets/img/splashScreen.png
     
   # To add assets to your application, add an assets section, like this:
   # assets:
