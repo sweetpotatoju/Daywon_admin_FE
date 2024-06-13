@@ -1,38 +1,54 @@
-// ignore_for_file: unnecessary_const
-
+import 'package:flutter/material.dart';
 import 'package:admin/AdminAccountManagementPage.dart';
 import 'package:admin/AdminCreateProblemPage.dart';
 import 'package:admin/completeCheck/CompleteCheckProblem.dart';
-import 'package:admin/modify/ChooseContentCategory.dart';
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const AdminPage());
-}
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({Key? key}) : super(key: key);
+  final String nickname;
+  final String apiUrl;
+
+  const AdminPage({Key? key, required this.nickname, required this.apiUrl}) : super(key: key);
 
   @override
   _AdminPageState createState() => _AdminPageState();
 }
 
 class _AdminPageState extends State<AdminPage> {
-  String nickname = '';
   int numberOfProblems = 0;
+  int adminLevel = 0;
 
   @override
   void initState() {
     super.initState();
-    fetchSessionData();
+    fetchAdminLevel();
   }
 
-  Future<void> fetchSessionData() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      nickname = 'John Doe';
-      numberOfProblems = 10;
-    });
+  Future<void> fetchAdminLevel() async {
+    final url = Uri.parse('${widget.apiUrl}/admins/read_level/${widget.nickname}');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        setState(() {
+          adminLevel = responseBody['level'];
+        });
+      } else {
+        setState(() {
+          adminLevel = 0; // default to no permissions if there's an error
+        });
+      }
+    } catch (error) {
+      // Handle the error
+      setState(() {
+        adminLevel = 0; // default to no permissions if there's an error
+      });
+    }
   }
 
   @override
@@ -66,11 +82,11 @@ class _AdminPageState extends State<AdminPage> {
                     ),
                     children: [
                       TextSpan(
-                        text: nickname,
+                        text: widget.nickname,
                         style: const TextStyle(fontWeight: FontWeight.w800),
                       ),
                       const TextSpan(
-                        text: ' 님, 안녕하세요!',
+                        text: ' 관리자님, 안녕하세요!',
                       ),
                     ],
                   ),
@@ -114,9 +130,9 @@ class _AdminPageState extends State<AdminPage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "데이원 관리자 계정",
                               style: TextStyle(
@@ -147,14 +163,12 @@ class _AdminPageState extends State<AdminPage> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  SizedBox(
-                    child: Container(
-                      width: 15,
-                      height: 15,
-                      decoration: const ShapeDecoration(
-                        color: Color(0xFF0075FF),
-                        shape: OvalBorder(),
-                      ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: const ShapeDecoration(
+                      color: Color(0xFF0075FF),
+                      shape: OvalBorder(),
                     ),
                   ),
                   const Padding(
@@ -165,132 +179,130 @@ class _AdminPageState extends State<AdminPage> {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        height: 0,
                       ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 15),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AdminCreateProblemPage()),
-                  );
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFF8BC0FF),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              if (adminLevel >= 1)
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminCreateProblemPage(),
+                      ),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFF8BC0FF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    minimumSize: Size(MediaQuery.of(context).size.width, 65),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  minimumSize: Size(MediaQuery.of(context).size.width, 65),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: const Text(
-                  '문제 생성',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
+                  child: const Text(
+                    '문제 생성',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
-              ),
               const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ContentReview(),
+              if (adminLevel >= 2)
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompleteCheckProblem(),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF8BC0FF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xFF8BC0FF),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          minimumSize: Size(MediaQuery.of(context).size.width * 0.5, 65),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        minimumSize: Size(
-                            MediaQuery.of(context).size.width * 0.5,
-                            65), // 화면 폭의 반만큼의 너비
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: const Text(
-                        '검수 필요 문제',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8), // 각 버튼 사이에 간격을 추가합니다.
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CompleteCheckProblem(),
+                        child: const Text(
+                          '검수 필요 문제',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xFF8BC0FF),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        minimumSize: Size(
-                            MediaQuery.of(context).size.width * 0.5,
-                            65), // 화면 폭의 반만큼의 너비
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: const Text(
-                        '검수 완료 문제',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15), // 버튼 간의 간격
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          AdminAccountManagementPage(), // 관리자 계정 관리 페이지로 이동
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompleteCheckProblem(),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF8BC0FF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          minimumSize: Size(MediaQuery.of(context).size.width * 0.5, 65),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: const Text(
+                          '검수 완료 문제',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFF8BC0FF),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  minimumSize: Size(MediaQuery.of(context).size.width, 65),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  ],
                 ),
-                child: const Text(
-                  '관리자 계정 관리',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
+              const SizedBox(height: 15),
+              if (adminLevel >= 3)
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminAccountManagementPage(),
+                      ),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFF8BC0FF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    minimumSize: Size(MediaQuery.of(context).size.width, 65),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: const Text(
+                    '관리자 계정 관리',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

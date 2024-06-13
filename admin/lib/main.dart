@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'config.dart';
-import 'package:admin/LoginPage.dart';
+import 'LoginPage.dart';
 
 void main() {
   runApp(MyApp(apiUrl: Config.apiUrl));
