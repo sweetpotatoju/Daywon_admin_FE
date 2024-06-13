@@ -120,6 +120,24 @@ class _AdminAccountManagementPageState
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            Row(
+              children: [
+                Positioned(
+                  top: 60,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset(
+                      'assets/img/backbtn.png',
+                      width: 45,
+                      height: 45,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const Text(
               '계정 관리',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
