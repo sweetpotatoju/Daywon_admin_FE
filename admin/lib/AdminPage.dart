@@ -282,7 +282,7 @@ class _AdminPageState extends State<AdminPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AdminAccountManagementPage(),
+                        builder: (context) => AdminAccountManagementPage(apiUrl: widget.apiUrl)
                       ),
                     );
                   },
