@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:admin/AdminAccountManagementPage.dart';
 import 'package:admin/AdminCreateProblemPage.dart';
-import 'package:admin/completeCheck/CompleteCheckProblem.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -16,13 +15,16 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  int numberOfProblems = 0;
+  int createdProblemCount = 0;
+  int trueQuestionsCount = 0;
+  int userCount = 0;
   int adminLevel = 0;
 
   @override
   void initState() {
     super.initState();
     fetchAdminLevel();
+    fetchCountData();
   }
 
   Future<void> fetchAdminLevel() async {
@@ -48,6 +50,26 @@ class _AdminPageState extends State<AdminPage> {
       setState(() {
         adminLevel = 0; // default to no permissions if there's an error
       });
+    }
+  }
+
+  Future<void> fetchCountData() async {
+    final url = Uri.parse('${widget.apiUrl}/get_count_data/');
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        setState(() {
+          createdProblemCount = responseBody['created_problem'];
+          trueQuestionsCount = responseBody['true_questions_count'];
+          userCount = responseBody['get_user_count'];
+        });
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      // Handle error
     }
   }
 
@@ -140,7 +162,7 @@ class _AdminPageState extends State<AdminPage> {
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              "생성된 문제 수",
+                              "실시간 현황",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600),
@@ -149,11 +171,28 @@ class _AdminPageState extends State<AdminPage> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10),
                     Text(
-                      '$numberOfProblems 개',
+                      '이용자 수: $userCount',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 26,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      '생성된 문제 수: $createdProblemCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      '검토 완료된 문제 수: $trueQuestionsCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -191,7 +230,7 @@ class _AdminPageState extends State<AdminPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AdminCreateProblemPage(),
+                        builder: (context) => AdminCreateProblemPage(apiUrl: widget.apiUrl),
                       ),
                     );
                   },
@@ -211,69 +250,6 @@ class _AdminPageState extends State<AdminPage> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                ),
-              const SizedBox(height: 15),
-              if (adminLevel >= 2)
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CompleteCheckProblem(),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF8BC0FF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: Size(MediaQuery.of(context).size.width * 0.5, 65),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        child: const Text(
-                          '검수 필요 문제',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CompleteCheckProblem(),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF8BC0FF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: Size(MediaQuery.of(context).size.width * 0.5, 65),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        child: const Text(
-                          '검수 완료 문제',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               const SizedBox(height: 15),
               if (adminLevel >= 3)

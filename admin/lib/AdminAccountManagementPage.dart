@@ -82,32 +82,23 @@ class _AdminAccountManagementPageState
 
     final responseData = jsonDecode(response.body);
     if (response.statusCode == 200 && responseData['status'] == 'success') {
+      await fetchAccounts();
       return 'success';
     } else {
       return 'error';
     }
   }
 
-  void showResultDialog(String title, String message, bool shouldPopUntilMain) {
+  void showResultDialog(String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
+        Future.delayed(const Duration(seconds: 3), () {
+          Navigator.of(context).pop();
+        });
         return AlertDialog(
           title: Text(title),
           content: Text(message),
-          actions: [
-            TextButton(
-              child: const Text('확인'),
-              onPressed: () {
-                if (shouldPopUntilMain) {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  fetchAccounts();
-                } else {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
         );
       },
     );
@@ -156,8 +147,7 @@ class _AdminAccountManagementPageState
                     ),
                     DropdownMenuItem<int>(
                       value: 1,
-                      child: const Text('1'),
-                    ),
+                      child: const Text('1')),
                     DropdownMenuItem<int>(
                       value: 2,
                       child: const Text('2'),
@@ -239,18 +229,13 @@ class _AdminAccountManagementPageState
                             TextButton(
                               child: const Text('등록'),
                               onPressed: () async {
+                                Navigator.of(context).pop();
                                 if (adminName != null && password != null && selectedLevel != null) {
                                   String result = await createAccount(adminName!, password!, selectedLevel!);
-                                  if (result == 'success') {
-                                    fetchAccounts();
-                                    showResultDialog('성공', '계정이 성공적으로 등록되었습니다.', true);
-                                  } else {
-                                    showResultDialog('실패', '계정 등록에 실패하였습니다.', false);
-                                  }
+                                  showResultDialog(result == 'success' ? '성공' : '실패', result == 'success' ? '계정이 성공적으로 등록되었습니다.' : '계정 등록에 실패하였습니다.');
                                 } else {
-                                  showResultDialog('실패', '모든 필드를 입력해주세요.', false);
+                                  showResultDialog('실패', '모든 필드를 입력해주세요.');
                                 }
-                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -309,7 +294,7 @@ class _AdminAccountManagementPageState
                                       onUpdate: (updatedAccount) async {
                                         String result = await updateAccount(updatedAccount);
                                         showResultDialog(result == 'success' ? '업데이트 완료' : '업데이트 실패',
-                                            result == 'success' ? '업데이트가 완료되었습니다.' : '업데이트가 실패하였습니다.', false);
+                                            result == 'success' ? '업데이트가 완료되었습니다.' : '업데이트가 실패하였습니다.');
                                         return result;
                                       },
                                     ),
