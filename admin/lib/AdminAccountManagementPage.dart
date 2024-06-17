@@ -25,7 +25,7 @@ class _AdminAccountManagementPageState
   }
 
   Future<void> fetchAccounts() async {
-    final response = await http.get(Uri.parse('${widget.apiUrl}/read_admins_list/'));
+    final response = await http.get(Uri.parse('${widget.apiUrl}/read_admins_list_mobile/'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       setState(() {
