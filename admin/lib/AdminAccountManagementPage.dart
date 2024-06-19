@@ -8,12 +8,10 @@ class AdminAccountManagementPage extends StatefulWidget {
   const AdminAccountManagementPage({Key? key, required this.apiUrl}) : super(key: key);
 
   @override
-  _AdminAccountManagementPageState createState() =>
-      _AdminAccountManagementPageState();
+  _AdminAccountManagementPageState createState() => _AdminAccountManagementPageState();
 }
 
-class _AdminAccountManagementPageState
-    extends State<AdminAccountManagementPage> {
+class _AdminAccountManagementPageState extends State<AdminAccountManagementPage> {
   List<Account> accounts = [];
   List<Account> filteredAccounts = [];
   int? selectedFilterLevel;
@@ -82,7 +80,6 @@ class _AdminAccountManagementPageState
 
     final responseData = jsonDecode(response.body);
     if (response.statusCode == 200 && responseData['status'] == 'success') {
-      await fetchAccounts();
       return 'success';
     } else {
       return 'error';
@@ -107,185 +104,187 @@ class _AdminAccountManagementPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Positioned(
-                  top: 60,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      'assets/img/backbtn.png',
-                      width: 45,
-                      height: 45,
-                    ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset(
+                    'assets/img/backbtn.png',
+                    width: 45,
+                    height: 45,
                   ),
                 ),
-              ],
-            ),
-            const Text(
-              '계정 관리',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<int>(
-                  value: selectedFilterLevel,
-                  hint: const Text("레벨 선택: 전체"),
-                  items: [
-                    DropdownMenuItem<int>(
-                      value: null,
-                      child: const Text('전체'),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 1,
-                      child: const Text('1')),
-                    DropdownMenuItem<int>(
-                      value: 2,
-                      child: const Text('2'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedFilterLevel = value;
-                      filterAccounts();
-                    });
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        String? adminName;
-                        String? password;
-                        int? selectedLevel;
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          title: const Text('계정 등록'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+              ),
+              const Text(
+                '계정 관리',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton<int>(
+                    value: selectedFilterLevel,
+                    hint: const Text("레벨 선택: 전체"),
+                    items: [
+                      DropdownMenuItem<int>(
+                        value: null,
+                        child: const Text('전체'),
+                      ),
+                      DropdownMenuItem<int>(
+                        value: 1,
+                        child: const Text('1')),
+                      DropdownMenuItem<int>(
+                        value: 2,
+                        child: const Text('2'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedFilterLevel = value;
+                        filterAccounts();
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          String? adminName;
+                          String? password;
+                          int? selectedLevel;
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: const Text('계정 등록'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    labelText: '아이디',
                                   ),
-                                  labelText: '아이디',
+                                  onChanged: (value) {
+                                    adminName = value;
+                                  },
                                 ),
-                                onChanged: (value) {
-                                  adminName = value;
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                const SizedBox(height: 10),
+                                TextField(
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    labelText: '비밀번호',
                                   ),
-                                  labelText: '비밀번호',
+                                  onChanged: (value) {
+                                    password = value;
+                                  },
                                 ),
-                                onChanged: (value) {
-                                  password = value;
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              DropdownButtonFormField<int>(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                const SizedBox(height: 10),
+                                DropdownButtonFormField<int>(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    labelText: '레벨 선택',
                                   ),
-                                  labelText: '레벨 선택',
+                                  items: [
+                                    DropdownMenuItem<int>(
+                                      value: 1,
+                                      child: const Text('1'),
+                                    ),
+                                    DropdownMenuItem<int>(
+                                      value: 2,
+                                      child: const Text('2'),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    selectedLevel = value;
+                                  },
+                                  hint: const Text("레벨"),
                                 ),
-                                items: [
-                                  DropdownMenuItem<int>(
-                                    value: 1,
-                                    child: const Text('1'),
-                                  ),
-                                  DropdownMenuItem<int>(
-                                    value: 2,
-                                    child: const Text('2'),
-                                  ),
-                                ],
-                                onChanged: (value) {
-                                  selectedLevel = value;
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('등록'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop(true); // Close the dialog and return true
+                                  if (adminName != null && password != null && selectedLevel != null) {
+                                    String result = await createAccount(adminName!, password!, selectedLevel!);
+                                    showResultDialog(result == 'success' ? '성공' : '실패', result == 'success' ? '계정이 성공적으로 등록되었습니다.' : '계정 등록에 실패하였습니다.');
+                                  } else {
+                                    showResultDialog('실패', '모든 필드를 입력해주세요.');
+                                  }
                                 },
-                                hint: const Text("레벨"),
                               ),
                             ],
-                          ),
-                          actions: [
-                            TextButton(
-                              child: const Text('등록'),
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                if (adminName != null && password != null && selectedLevel != null) {
-                                  String result = await createAccount(adminName!, password!, selectedLevel!);
-                                  showResultDialog(result == 'success' ? '성공' : '실패', result == 'success' ? '계정이 성공적으로 등록되었습니다.' : '계정 등록에 실패하였습니다.');
-                                } else {
-                                  showResultDialog('실패', '모든 필드를 입력해주세요.');
-                                }
-                              },
-                            ),
+                          );
+                        },
+                      );
+                      if (result == true) {
+                        await fetchAccounts(); // Refresh the account list after the dialog is closed
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminAccountManagementPage(apiUrl: widget.apiUrl)),
+                        ); // Reload the page
+                      }
+                    },
+                    child: const Text('계정 등록'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // 직각 모서리
+                      ),
+                      minimumSize: const Size(100, 40),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: const [
+                            Expanded(
+                                child: Center(
+                                    child: Text('아이디',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)))),
+                            Expanded(
+                                child: Center(
+                                    child: Text('레벨',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)))),
+                            Expanded(
+                                child: Center(
+                                    child: Text('상태',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)))),
                           ],
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('계정 등록'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0), // 직각 모서리
-                    ),
-                    minimumSize: const Size(100, 40),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        Expanded(
-                            child: Center(
-                                child: Text('아이디',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)))),
-                        Expanded(
-                            child: Center(
-                                child: Text('레벨',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)))),
-                        Expanded(
-                            child: Center(
-                                child: Text('상태',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)))),
-                      ],
-                    ),
-                  ),
-                  const Divider(color: Colors.black),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
+                        ),
+                      ),
+                      const Divider(color: Colors.black),
+                      Column(
                         children: filteredAccounts
                             .map((account) => Column(
                                   children: [
@@ -303,12 +302,12 @@ class _AdminAccountManagementPageState
                                 ))
                             .toList(),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
